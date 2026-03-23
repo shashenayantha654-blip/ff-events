@@ -235,7 +235,17 @@ membershipBtn.addEventListener("click", () => {
   }, 50);
 });
 </script>
-
+<!-- LOGIN FORM -->
+<div id="loginForm" style="text-align:center; margin-top:100px;">
+  <h2>🔐 Login First</h2>
+  <input type="text" id="username" placeholder="Username"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+  <p id="loginMsg"></p>
+</div>
+<div id="mainContent" style="display:none;">  
+  <!--https://shashenayantha654-blip.github.io/ff-events/ -->  
+</div>
 <h1>🔥 Free Fire Events 🔥</h1>
 <div id="welcomeNote" style="text-align:center; margin:25px 0; padding:20px; background:#1a1a1a; border-radius:20px; box-shadow:0 0 25px #00ffcc; max-width:800px; margin-left:auto; margin-right:auto;">
   <h2 style="color:#00ffcc; font-size:28px; margin-bottom:15px;">🔥 Welcome to Free Fire Events 🔥</h2>
@@ -412,3 +422,16 @@ membershipBtn.addEventListener("click", () => {
 <a href="https://wa.me/94761160057?text=Hello Owner! I visited your Free Fire events site and I want to Top Up my diamonds. Can you please guide me? 💎" target="_blank" id="whatsappBtn">
   📲 Contact and chat with Owner🔥
 </a>
+<script>
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if(user === "admin" && pass === "1234") {
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
+  } else {
+    document.getElementById("loginMsg").innerText = "❌ Wrong username or password!";
+  }
+}
+</script>
