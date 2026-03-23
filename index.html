@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FF Events</title>
+  <link rel="stylesheet" href="style.css">
+</head><style>
+body {
+  margin: 0;
+  font-family: Arial;
+  text-align: center;
+  color: white;
+
+  background: linear-gradient(-45deg, #0f0f0f, #001f1f, #003333, #001a1a);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style>
+<body><script>
+function searchEvent() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let cards = document.getElementsByClassName("card");
+
+  for (let i = 0; i < cards.length; i++) {
+    let text = cards[i].innerText.toLowerCase();
+
+    if (text.includes(input)) {
+      cards[i].style.display = "block";
+    } else {
+      cards[i].style.display = "none";
+    }
+  }
+}
+// Dark/Light Mode Toggle
+const toggle = document.createElement("button");
+toggle.id = "modeToggle";
+toggle.textContent = "☀️ Light Mode";
+
+// Place button just under the search input
+const searchInput = document.getElementById("searchInput");
+searchInput.insertAdjacentElement("afterend", toggle);
+
+// Load last mode from localStorage
+const savedMode = localStorage.getItem("mode");
+if (savedMode === "light") {
+    document.body.classList.add("light-mode");
+    document.querySelector('h1').classList.add("light-mode");
+
+    const cards = document.getElementsByClassName("card");
+    for (let i = 0; i < cards.length; i++) {
+        cards[i].classList.add("light-mode");
+    }
+
+    toggle.textContent = "🌙 Dark Mode";
+}
+
+// Toggle mode on button click
+toggle.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
+    document.querySelector('h1').classList.toggle("light-mode");
+
+    const cards = document.getElementsByClassName("card");
+    for (let i = 0; i < cards.length; i++) {
+        cards[i].classList.toggle("light-mode");
+    }
+
+    if (document.body.classList.contains("light-mode")) {
+        toggle.textContent = "🌙 Dark Mode";
+        localStorage.setItem("mode", "light");
+    } else {
+        toggle.textContent = "☀️ Light Mode";
+        localStorage.setItem("mode", "dark");
+    }
+});
+const loginBtn = document.getElementById("loginBtn");
+const loginMsg = document.getElementById("loginMsg");
+
+loginBtn.addEventListener("click", () => {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  // Example credentials
+  if(username === "admin" && password === "1234"){
+    loginMsg.style.color = "green";
+    loginMsg.textContent = "Login Successful! 🎉";
+
+    // Hide login form and show main content
+  // Login successful
+document.getElementById("loginForm").style.display = "none";
+document.getElementById("searchInput").style.display = "block";
+document.getElementById("modeToggle").style.display = "inline-block";
+document.querySelector(".container").style.display = "flex";
+
+// SHOW Contact Owner button after login
+document.getElementById("contactOwner").style.display = "inline-block";
+  } else {
+    loginMsg.style.color = "red";
+    loginMsg.textContent = "Wrong username or password!";
+  }
+});
+function filterByDate() {
+  const selectedDate = document.getElementById("eventDate").value; // yyyy-mm-dd format
+  const cards = document.getElementsByClassName("card");
+
+  for (let i = 0; i < cards.length; i++) {
+    let cardDateText = cards[i].querySelector("p").innerText; // 📅 March 25
+    let cardDate = cardDateText.replace('📅 ',''); // Remove icon
+    // Convert to yyyy-mm-dd for comparison
+    let eventDate = new Date(cardDate + " 2026"); // Example year, adjust if needed
+    let selDate = new Date(selectedDate);
+
+    if(selectedDate === "" || eventDate.getTime() === selDate.getTime()){
+      cards[i].style.display = "block";
+    } else {
+      cards[i].style.display = "none";
+    }
+  }
+}
+</script>
+<script>
+const loginBtn = document.getElementById("loginBtn");
+const loginMsg = document.getElementById("loginMsg");
+
+loginBtn.addEventListener("click", function() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const remember = document.getElementById("rememberMe").checked;
+
+  if(username === "admin" && password === "1234") {
+    loginMsg.style.color = "#00ffcc";
+    loginMsg.textContent = "✅ Login successful! Welcome " + username;
+
+    // If remember me checked, save in localStorage
+    if(remember){
+      localStorage.setItem("username", username);
+    }
+
+    // Hide login form (optional)
+    setTimeout(()=> {
+      document.getElementById("loginForm").style.display = "none";
+    }, 1000);
+
+  } else {
+    loginMsg.style.color = "#ff3333";
+    loginMsg.textContent = "❌ Wrong username or password!";
+  }
+});
+</script>
+<!-- Music Control Button -->
+<button id="musicBtn" style="position:fixed; bottom:20px; right:20px; padding:10px 15px; border-radius:10px; background:#00ffcc; color:#000; font-weight:bold; cursor:pointer;">
+🎵 Play Music
+</button>
+
+<!-- Audio File -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+
+btn.addEventListener("click", function() {
+  if(music.paused){
+    music.play();
+    btn.textContent = "🎵 Pause Music";
+  } else {
+    music.pause();
+    btn.textContent = "🎵 Play Music";
+  }
+});
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", () => {
+  // Hide main content
+  document.querySelector(".container").style.display = "none";
+
+  // Hide logout button
+  logoutBtn.style.display = "none";
+
+  // Show login form
+  document.getElementById("loginForm").style.display = "block";
+
+  // Clear login message
+  document.getElementById("loginMsg").textContent = "";
+
+  // Clear saved username from localStorage if used
+  localStorage.removeItem("username");
+
+  // Reset dark/light mode (optional)
+  document.body.classList.remove("light-mode");
+  document.querySelector('h1').classList.remove("light-mode");
+});
+const profileButtons = document.querySelectorAll(".ffProfileBtn");
+
+profileButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    let playerID = btn.getAttribute("data-id");
+    if(playerID){
+      // Open profile link in new tab
+      window.open(`https://ff.garena.com/profile/${playerID}`, "_blank");
+    } else {
+      alert("Player ID missing!");
+    }
+  });
+});
+const membershipBtn = document.getElementById("membershipBtn");
+const membershipPriceDiv = document.getElementById("membershipPrice");
+
+const filaxMemberships = [
+  {name: "wekly lite Membership", price: "₹120/1week"},
+  {name: "wekly Membership", price: "¥500/1week"},
+  {name: "monthly Membership", price: "₹2500/month"},
+  {name: "Level-Up Pass", price: "¥220/limited}
+];
+
+membershipBtn.addEventListener("click", () => {
+  let html = "<h3>🎫 SHASHEN Gaming Membership & Level-Up Pass 🎫</h3><ul style='list-style:none; padding:0;'>";
+  filaxMemberships.forEach(pkg => {
+    html += `<li style="margin:8px 0; font-size:16px;">${pkg.name}: ${pkg.price}</li>`;
+  });
+  html += "</ul>";
+
+  membershipPriceDiv.innerHTML = html;
+  
+  // Fade-in effect
+  membershipPriceDiv.style.opacity = 0;
+  setTimeout(() => {
+    membershipPriceDiv.style.opacity = 1;
+  }, 50);
+});
+</script>
+
+<h1>🔥 Free Fire Events 🔥</h1>
+<div id="welcomeNote" style="text-align:center; margin:25px 0; padding:20px; background:#1a1a1a; border-radius:20px; box-shadow:0 0 25px #00ffcc; max-width:800px; margin-left:auto; margin-right:auto;">
+  <h2 style="color:#00ffcc; font-size:28px; margin-bottom:15px;">🔥 Welcome to Free Fire Events 🔥</h2>
+  
+  <p style="color:white; font-size:18px; line-height:1.6; margin:10px 0;">
+    🇬🇧: Welcome warriors! Explore all upcoming Free Fire events, special tournaments, exciting rewards, and latest updates right here. 
+    Stay tuned, have fun, and never miss any amazing opportunities in the world of Free Fire. Gear up and be ready for action!
+  </p>
+  
+  <p style="color:white; font-size:18px; line-height:1.6; margin:10px 0;">
+    🇸🇱: ආයුබෝවන් Free Fire යෝධයෝ! මෙහිදී ඔබට අලුත්ම events, විශේෂ tournaments, රසවත් rewards සහ Free Fire updates සියල්ල සොයාගත හැක. 
+    සෑම අවස්ථාවක්ම අත්හැර නොදෙන්න, ආරම්භයට සූදානම් වන්න, හා Free Fire ලෝකයේ සෙල්ලම් විඳින්න!
+  </p>
+</div>
+<div id="loginForm" class="login-container">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <p id="loginMsg"></p>
+</div>
+<input type="text" id="searchInput" placeholder="Search events..." onkeyup="searchEvent()"> 
+<input type="date" id="eventDate" onchange="filterByDate()">
+<button id="modeToggle">🌙 Dark Mode</button>
+<div class="container">
+<button id="logoutBtn" style="display:none; padding:10px 15px; border-radius:10px; background:#ff3333; color:white; font-weight:bold; cursor:pointer; margin-top:20px;">
+  🔒 Logout
+</button>
+  <div class="card">
+    <img src="https://i.ibb.co/8DSHZ0Wh/Rashmika-Ofc.jpg">
+    <h2>Ramadan Event</h2>
+    <p>📅 March 25</p>
+    <p>Free rewards + bundles 😎</p>
+  </div>
+  </a>
+</div>
+
+  <div class="card">
+    <img src="https://i.ibb.co/W4WXnN61/Rashmika-Ofc.jpg">
+    <h2>Elite Pass🔥</h2>
+    <p>📅 April</p>
+    <p>New old skins coming 🔥</p>
+  </div
+  <div class="card" id="pantherEvent">
+  <img src="https://i.ibb.co/3y7s6pH/panther.jpg">
+  <h2>Panther Event 🐾</h2>
+  <p>📅 April 10</p>
+  <p>Exclusive panther bundle + special rewards 🔥</p>
+  <p id="countdown">Loading countdown...</p>
+</div>
+  <div id="ffHistory" class="ff-history-container">
+  <h2>📜 Free Fire History / ඉතිහාසය</h2>
+  <h3 style="text-align:center; margin-top:20px;">📥 Download Free Fire</h3>
+
+<div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+
+  <!-- Free Fire Normal -->
+  <a href="https://play.google.com/store/apps/details?id=com.dts.freefireth" target="_blank">
+    <button style="padding:12px 20px; border:none; border-radius:10px; background:#00ffcc; font-weight:bold; cursor:pointer;">
+      🔥 Download Free Fire
+    </button>
+  </a>
+
+  <!-- Free Fire MAX -->
+  <a href="https://play.google.com/store/apps/details?id=com.dts.freefiremax" target="_blank">
+    <button style="padding:12px 20px; border:none; border-radius:10px; background:#ff9900; font-weight:bold; cursor:pointer;">
+      🚀 Download Free Fire MAX
+    </button>
+  </a>
+
+</div>
+<h3 style="text-align:center; margin-top:20px;">💬 Join Our WhatsApp Channels</h3>
+
+<div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+
+  <!-- WhatsApp Channel 1 -->
+  <a href="https://whatsapp.com/channel/0029Vb7T5i20G0XkBgrwYx3V" target="_blank">
+    <button style="padding:12px 20px; border:none; border-radius:10px; background:#25D366; font-weight:bold; cursor:pointer; color:white;">
+      📲 Join WhatsApp Channel 1
+    </button>
+  </a>
+
+  <!-- WhatsApp Channel 2 -->
+  <a href="https://whatsapp.com/channel/0029Vb7a9bO6RGJKJbh4xR0F" target="_blank">
+    <button style="padding:12px 20px; border:none; border-radius:10px; background:#128C7E; font-weight:bold; cursor:pointer; color:white;">
+      📲 Join WhatsApp Channel 2
+    </button>
+  </a>
+
+</div>
+  <p>🇸🇱: Free Fire පළමු වරට 2017 වසරේ ලොවට හැඳින්වුණා. මෙහි අරමුණ gamers ලාට mobile battle royale experience එක ලබාදීමයි.</p>
+  
+  <p>🇬🇧: Free Fire was first launched globally in 2017. Its goal is to give gamers a mobile battle royale experience like no other.</p>
+  
+  <p>🇸🇱: ලොකු tournaments සහ special events වලින් Free Fire community එක ඉතා active වෙලා තියෙනවා.</p>
+  
+  <p>🇬🇧: Through big tournaments and special events, the Free Fire community has become very active worldwide.</p>
+</div><div id="loginForm" class="login-container" style="max-width:350px; margin:auto; background:#1a1a1a; padding:20px; border-radius:15px; box-shadow:0 0 15px #00ffcc;">
+  <h2 style="color:#00ffcc; text-align:center;">Login</h2>
+
+  <input type="text" id="username" placeholder="Username" style="width:100%; padding:10px; margin:10px 0; border-radius:10px; border:none; outline:none;">
+  <input type="password" id="password" placeholder="Password" style="width:100%; padding:10px; margin:10px 0; border-radius:10px; border:none; outline:none;">
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+    <label style="color:white; font-size:14px;">
+      <input type="checkbox" id="rememberMe"> Remember me
+    </label>
+    <a href="#" style="color:#00ffcc; font-size:14px; text-decoration:none;">Forgot password?</a>
+  </div>
+
+  <button id="loginBtn" style="width:100%; padding:12px; background:#00ffcc; color:#000; font-weight:bold; border:none; border-radius:10px; cursor:pointer;">Login</button>
+
+  <p id="loginMsg" style="text-align:center; margin-top:10px;"></p>
+</div>
+
+</div>
+
+</body>
+</html>
+<div style="text-align:center; margin-top:20px;">
+  <a id="contactOwner" href="https://wa.me/94761160057?text=Hello Owner! I visited your Free Fire events site and I have a question." target="_blank" style="display:none;">
+    <button style="padding:12px 20px; border:none; border-radius:12px; background:#25D366; color:white; font-weight:bold; cursor:pointer; transition:0.3s; box-shadow:0 0 15px #00ffcc;">
+      📲 Contact Owner
+    </button>
+  </a>
+</div><button class="ffProfileBtn" data-id="123456789"
+  style="
+    padding:15px 30px;
+    font-size:20px;
+    border:none;
+    border-radius:15px;
+    background:#00ccff;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:15px;
+    box-shadow:0 0 10px #00ccff;
+    transition: transform 0.2s;
+  "
+  onmouseover="this.style.transform='scale(1.05)';"
+  onmouseout="this.style.transform='scale(1)';"
+>
+  
+<!-- Membership Button -->
+<button id="membershipBtn" 
+  style="
+    padding:15px 30px;
+    font-size:18px;
+    font-weight:bold;
+    border:none;
+    border-radius:12px;
+    background:#00ffcc;
+    color:#000;
+    cursor:pointer;
+    box-shadow:0 0 15px #00ffcc;
+    transition: transform 0.2s, background 0.3s;
+    margin-top:15px;
+  "
+  onmouseover="this.style.transform='scale(1.05)'; this.style.background='#00ffaa';"
+  onmouseout="this.style.transform='scale(1)'; this.style.background='#00ffcc';"
+>
+  🎫 SHASHEN Gaming Membership & Pass
+</button>
+
+<!-- Price Display -->
+<div id="membershipPrice" style="
+    margin-top:15px; 
+    font-size:18px; 
+    color:#ffcc00;
+    opacity:0;
+    transition: opacity 0.5s;
+"></div>
+<!-- WhatsApp Contact Button -->
+<a href="https://wa.me/94761160057?text=Hello Owner! I visited your Free Fire events site and I want to Top Up my diamonds. Can you please guide me? 💎" target="_blank" id="whatsappBtn">
+  📲 Contact and chat with Owner🔥
+</a>
